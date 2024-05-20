@@ -107,6 +107,9 @@ elif source_radio == settings.RTSP:
 elif source_radio == settings.YOUTUBE:
     helper.play_youtube_video(confidence, model)
 elif source_radio == settings.ENCROACHMENT:
+    helper.enchroachment()
+elif source_radio == settings.JUNCTION:  
+    
     cmd = [
     "python3",
     "scripts/draw_zones.py",
@@ -129,6 +132,6 @@ elif source_radio == settings.ENCROACHMENT:
 
     subprocess.run(cmd)
 elif source_radio == settings.JUNCTION:  
-    pass
+        helper.input_video(confidence, model)        
 else:
     st.error("Please select a valid source type!")
