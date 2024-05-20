@@ -1,0 +1,11 @@
+assets
+build
+configure
+images
+scripts
+subclips
+utils
+venv
+videos
+weights
+yolox

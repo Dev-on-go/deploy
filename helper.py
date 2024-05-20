@@ -2,9 +2,16 @@ from ultralytics import YOLO
 import time
 import streamlit as st
 import cv2
+import os
 from pytube import YouTube
+<<<<<<< Updated upstream
 import supervision as sv
 import ffmpeg
+=======
+from pathlib import Path
+from datetime import datetime, timedelta
+from moviepy.video.io import ffmpeg_tools
+>>>>>>> Stashed changes
 
 import settings
 import argparse
@@ -346,6 +353,7 @@ def play_stored_video(conf, model):
         except Exception as e:
             st.sidebar.error("Error loading video: " + str(e))
 
+<<<<<<< Updated upstream
 def drawzones(source_path, zone_configuration_path):
     
     def resolve_source(source_path: str) -> Optional[np.ndarray]:
@@ -581,3 +589,92 @@ def livedetection(source_url: str, violation_time: int, zone_configuration_path:
         pipeline.join()
     except KeyboardInterrupt:
         pipeline.terminate()
+=======
+def input_video(conf, model):
+    #User selects a video file using Streamlit's file_uploader
+
+    video_source = st.sidebar.file_uploader("Choose a video...", type=("mp4", "avi", "mov"))
+    
+    # If a video file is selected
+    if video_source is not None:
+        # Get the path of the selected video file
+        print(video_source.name)
+        video_path = os.path.abspath(video_source.name)
+        print(video_path)
+        
+        # Process the video here
+        st.success(f"Selected video: {video_path}")
+        
+        # Datasetcreation.py
+        
+        # Function to subtract timestamps and calculate time difference in seconds
+        def subtract_timestamps(timestamp1, timestamp2):
+            time_format = "%H:%M:%S"
+            dt1 = datetime.strptime(timestamp1, time_format)
+            dt2 = datetime.strptime(timestamp2, time_format)
+            time_difference = dt1 - dt2
+            total_seconds = time_difference.total_seconds()
+            return total_seconds
+        
+        # Define video length in minutes and seconds
+        m_VideoLength = 21
+        s_VideoLength = 16
+        
+        # Define start and end timestamps for the desired clip
+        clip_start_time = "10:00:12"
+        clip_end_time = "10:19:59"
+        
+        # Calculate the duration of the clip in seconds
+        clipDuration = subtract_timestamps(clip_end_time, clip_start_time)
+        
+        # Calculate the total duration of the video in seconds
+        videoDuration = (m_VideoLength * 60) + s_VideoLength
+        
+        # Calculate the offset constant for slicing the video
+        offSetConstant = clipDuration / videoDuration
+        
+        # Define the starting timestamp for slicing the video
+        start_time_stamp = 11
+        
+        # Define a cycle of durations for each clip
+        cycle = [50, 35, 40]
+        
+        # Define the total duration of all clips
+        total_duration = 19 + (21 * 60)
+        
+        # Initialize a counter variable
+        i = 0
+        
+        # Loop to slice the video into multiple clips
+        while True:
+            # Get the index of the current cycle duration
+            index = i % 3
+            
+            # Calculate the end timestamp for the current clip
+            slice_end = start_time_stamp + (cycle[index] / offSetConstant)
+            
+            # If the end timestamp exceeds the total duration, break the loop
+            if slice_end > total_duration:
+                break
+            
+            # Define the name of the current clip
+            clip_name = f"clip{i}.mp4"
+            
+            # Define the input video path
+            input_video = f"{video_path}"
+            
+            # Create a folder named subclips if it doesn't exist
+            subclips_folder = "subclips"
+            if not os.path.exists(subclips_folder):
+                os.makedirs(subclips_folder)
+            
+            # Use ffmpeg to extract the subclip from the input video
+            output_path = os.path.join(subclips_folder, clip_name)
+            ffmpeg_tools.ffmpeg_extract_subclip(input_video, start_time_stamp, slice_end, output_path)
+            
+            # Increment the counter variable and update the start timestamp
+            i += 1
+            start_time_stamp = slice_end
+    else:
+        st.warning("Please choose a video file.")
+>>>>>>> Stashed changes

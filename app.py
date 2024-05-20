@@ -102,13 +102,40 @@ elif source_radio == settings.WEBCAM:
     helper.play_webcam(confidence, model)
 
 elif source_radio == settings.RTSP:
-    helper.play_rtsp_stream(confidence, model)
+    helper.play_rtsp_stream(confidence, model)	
 
 elif source_radio == settings.YOUTUBE:
     helper.play_youtube_video(confidence, model)
+    
+    
 elif source_radio == settings.ENCROACHMENT:
+<<<<<<< Updated upstream
     helper.enchroachment()
 elif source_radio == settings.JUNCTION:  
    pass
+=======
+    cmd = [
+    "python3",
+    "scripts/draw_zones.py",
+    "--source_path", "videos/video.mp4",
+    "--zone_configuration_path", "configure/config.json"
+	]
+
+    subprocess.run(cmd)
+    cmd = [
+	   "python",
+	    "ultralytics_file_example.py",
+	    "--zone_configuration_path", "configure/config.json",
+	    "--source_video_path", "videos/video.mp4",
+	    "--weights", "weights/yolov8n.pt",
+	    "--device", "cpu",
+	    "--classes", "2", "5", "6", "7",
+	    "--confidence_threshold", "0.3",
+	    "--iou_threshold", "0.7"
+		]
+    subprocess.run(cmd)
+elif source_radio == settings.JUNCTION:  
+        helper.input_video(confidence, model)        
+>>>>>>> Stashed changes
 else:
     st.error("Please select a valid source type!")
